@@ -64,7 +64,7 @@ $(function() {
   window.onhashchange = draw;
 
   if (!window.location.hash) {
-    var newDate = moment();
+    var newDate = moment.tz("UTC");
     window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | UTC";
   }
 
