@@ -49,7 +49,7 @@ $(function() {
 
       $(".date-top").text(date.format("MMMM Do, YYYY"));
       $(".time-top").text(date.format("HH:mm:ss"));
-      $(".zone-top").text(zone.replace(/_/g, " ").replace("Etc/", ""));
+      $(".zone-top").text(moment.tz.zone(zone).abbr(date));
 
       var converted = moment(date).local();
       localTime = converted;
