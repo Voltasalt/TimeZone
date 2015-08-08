@@ -2,6 +2,18 @@ $(function() {
   var zoneTime;
   var localTime;
 
+  var findZone = function(zoneStr) {
+    var zone;
+    moment.tz.names().forEach(function(z) {
+      if (z.toLowerCase().replace(/_/g, "").replace(/ /g, "") == zoneStr.replace(/_/g, "").replace(/ /g, "").toLowerCase()) {
+        zone = z;
+      } else if (z.split("/").pop().toLowerCase().replace(/_/g, "").replace(/ /g, "") == zoneStr.replace(/_/g, "").replace(/ /g, "").toLowerCase()) {
+        zone = z;
+      }
+    });
+    return zone;
+  }
+
   var draw = function() {
     var hash = window.location.hash;
 
@@ -20,14 +32,7 @@ $(function() {
         zoneStr = sections[2];
       }
 
-      var zone = "";
-      moment.tz.names().forEach(function(z) {
-        if (z.toLowerCase().replace(/_/g, "") == zoneStr.toLowerCase()) {
-          zone = z;
-        } else if (z.split("/").pop().toLowerCase().replace(/_/g, "") == zoneStr.toLowerCase()) {
-          zone = z;
-        }
-      });
+      var zone = findZone(zoneStr) || "UTC";
 
       if (dateStr) {
         var date = moment.tz(dateStr, ["YYYY-MM-DD", "MM-DD-YYYY", "DD-MM-YYY", "Do MMM YYYY", "Do of MMM YYYY", "DD MMM YYY", "MMM DD YYYY", "MMM Do YYYY", "DD MM YY", "DD MM, YY"], zone);
@@ -44,7 +49,7 @@ $(function() {
 
       $(".date-top").text(date.format("MMMM Do, YYYY"));
       $(".time-top").text(date.format("HH:mm:ss"));
-      $(".zone-top").text(zone.replace(/_/g, " "));
+      $(".zone-top").text(zone.replace(/_/g, " ").replace("Etc/", ""));
 
       var converted = moment(date).local();
       localTime = converted;
@@ -55,7 +60,7 @@ $(function() {
 
       $(".date-input").val(zoneTime.format("MMMM Do, YYYY"));
       $(".time-input").val(zoneTime.format("HH:mm:ss"));
-      $(".z").selectpicker("val", zone);
+      $(".z").selectpicker("val", zone.replace("Etc/", "").replace(/_/g, " "));
 
       $(".until").text(moment().to(converted));
     }
@@ -77,17 +82,13 @@ $(function() {
   $(".z").change(updateHash);
 
   $(".now").click(function() {
-    var newDate = moment().tz($(".z").val());
-    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | " + $(".z").val();
+    var newDate = moment().tz(findZone($(".z").val()));
+    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | " + $(".z").val()
   });
 
   moment.tz.names().forEach(function(zone) {
-    var elements = zone.split("/");
-    elements.reverse();
-    if (elements[1] == "Etc") elements.pop();
-    elements.reverse();
-
-    $(".z").append($("<option></option>").text(elements.join("/")).attr("value", zone));
+    zone = zone.replace("Etc/", "").replace(/_/g, " ");
+    $(".z").append($("<option></option>").text(zone).attr("value", zone));
   });
 
   $('.selectpicker').selectpicker();
@@ -97,4 +98,6 @@ $(function() {
   setInterval(function() {
     $(".until").text(moment().to(localTime));
   }, 500);
+
+  window.findZone = findZone;
 });
