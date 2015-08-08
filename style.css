@@ -36,6 +36,7 @@ body {
 }
 
 .minor {
+  color: #999;
 }
 
 .date {
@@ -44,6 +45,10 @@ body {
 }
 
 .time {
+  text-align: center;
+}
+
+.until {
   text-align: center;
 }
 

@@ -1,4 +1,7 @@
 $(function() {
+  var zoneTime;
+  var localTime;
+
   var draw = function() {
     var hash = window.location.hash;
 
@@ -38,12 +41,14 @@ $(function() {
         var time = moment().tz(zone);
       }
       date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
+      zoneTime = date;
 
       $(".date-top").text(date.format("MMMM Do, YYYY"));
       $(".time-top").text(date.format("HH:mm:ss"));
       $(".zone-top").text(zone.replace(/_/g, " "));
 
       var converted = moment(date).local();
+      localTime = converted;
 
       $(".date-bot").text(converted.format("MMMM Do, YYYY"));
       $(".time-bot").text(converted.format("HH:mm:ss"));
@@ -56,6 +61,8 @@ $(function() {
       $(".minute").selectpicker("val", date.minute());
       $(".second").selectpicker("val", date.second());
       $(".z").selectpicker("val", zone);
+
+      $(".until").text(moment().to(converted));
     }
   }
 
@@ -123,4 +130,8 @@ $(function() {
   $('.selectpicker').selectpicker();
 
   draw();
+
+  setInterval(function() {
+    $(".until").text(moment().to(localTime));
+  }, 500);
 });
