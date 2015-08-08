@@ -6,7 +6,7 @@ $(function() {
     var hash = window.location.hash;
 
     if (hash) {
-      var sections = hash.substr(1).split("/");
+      var sections = hash.substr(1).split(" | ");
 
       var timeStr, dateStr, zoneStr;
       if (sections.length == 1) {
@@ -19,7 +19,6 @@ $(function() {
         timeStr = sections[1];
         zoneStr = sections[2];
       }
-      zoneStr = zoneStr.replace(/,/g, "/");
 
       var zone = "";
       moment.tz.names().forEach(function(z) {
@@ -54,12 +53,8 @@ $(function() {
       $(".time-bot").text(converted.format("HH:mm:ss"));
       $(".zone-bot").text("your time");
 
-      $(".year").val(date.year());
-      $(".month").selectpicker("val", date.month());
-      $(".day").selectpicker("val", date.date());
-      $(".hour").selectpicker("val", date.hour());
-      $(".minute").selectpicker("val", date.minute());
-      $(".second").selectpicker("val", date.second());
+      $(".date-input").val(zoneTime.format("MMMM Do, YYYY"));
+      $(".time-input").val(zoneTime.format("HH:mm:ss"));
       $(".z").selectpicker("val", zone);
 
       $(".until").text(moment().to(converted));
@@ -68,54 +63,22 @@ $(function() {
 
   window.onhashchange = draw;
 
-  for (var i = 0; i < 12; i++) {
-    $(".month").append($("<option></option>").text(moment().month(i).format("MMMM")).attr("value", i));
-  }
-
-  for (var i = 0; i < 31; i++) {
-    $(".day").append($("<option></option>").text(moment().date(i+1).format("Do")).attr("value", i+1));
-  }
-
-  for (var i = 0; i < 24; i++) {
-    $(".hour").append($("<option></option>").text(moment().hour(i).format("HH")).attr("value", i));
-  }
-
-  for (var i = 0; i < 60; i++) {
-    $(".minute").append($("<option></option>").text(moment().minute(i).format("mm")).attr("value", i));
-  }
-
-  for (var i = 0; i < 60; i++) {
-    $(".second").append($("<option></option>").text(moment().second(i).format("ss")).attr("value", i));
-  }
-
   if (!window.location.hash) {
     var newDate = moment();
-    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + "/" + newDate.format("HH:mm:ss") + "/UTC";
+    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | UTC";
   }
 
   var updateHash = function() {
-    var newDate = moment({
-      year: parseInt($(".year").val()),
-      month: parseInt($(".month").val()),
-      date: parseInt($(".day").val()),
-      hour: parseInt($(".hour").val()),
-      minute: parseInt($(".minute").val()),
-      second: parseInt($(".second").val())
-    });
-    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + "/" + newDate.format("HH:mm:ss") + "/" + $(".z").val().replace(/\//g, ",");
+    window.location.hash = "#" + $(".date-input").val() + " | " + $(".time-input").val() + " | " + $(".z").val();
   }
 
-  $(".month").change(updateHash);
-  $(".year").change(updateHash);
-  $(".day").change(updateHash);
-  $(".hour").change(updateHash);
-  $(".minute").change(updateHash);
-  $(".second").change(updateHash);
+  $(".date-input").change(updateHash);
+  $(".time-input").change(updateHash);
   $(".z").change(updateHash);
 
   $(".now").click(function() {
     var newDate = moment().tz($(".z").val());
-    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + "/" + newDate.format("HH:mm:ss") + "/" + $(".z").val().replace(/\//g, ",");
+    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | " + $(".z").val();
   });
 
   moment.tz.names().forEach(function(zone) {
