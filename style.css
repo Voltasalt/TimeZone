@@ -1,0 +1,60 @@
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  outline: none !important;
+}
+
+.nav {
+  margin-top: 15px;
+
+  display: flex;
+  justify-content: center;
+  float: none;
+}
+
+.navbar {
+  border-radius: 0;
+}
+
+.block-container {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;
+
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  margin-top: 100px;
+}
+
+.block {
+  font-size: 36 !important;
+  flex: 1;
+}
+
+.minor {
+}
+
+.date {
+  text-align: right;
+  flex-grow: 1;
+}
+
+.time {
+  text-align: center;
+}
+
+.zone {
+  text-align: left;
+  flex-grow: 1;
+}
+
+.block-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 30px;
+}

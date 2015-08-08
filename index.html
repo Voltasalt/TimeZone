@@ -1,0 +1,58 @@
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.4.0/moment-timezone-with-data.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/js/bootstrap-select.min.js"></script>
+  <script src="app.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.3/css/bootstrap-select.min.css">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="navbar navbar-default">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <form class="form-inline">
+          <select class="month selectpicker" data-live-search="true" data-width="110">
+          </select>
+          <select class="day selectpicker" data-live-search="true" data-width="70">
+          </select>
+          <input type="text" class="year form-control" style="width: 100px;">
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <select class="hour selectpicker" data-live-search="true" data-width="70">
+          </select>
+          <select class="minute selectpicker" data-live-search="true" data-width="70">
+          </select>
+          <select class="second selectpicker" data-live-search="true" data-width="70">
+          </select>
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <select class="z selectpicker" data-live-search="true">
+          </select>
+        </form>
+      </ul>
+    </div>
+  </div>
+  <div class="container block-container">
+    <div class="block-row">
+      <div class="block date date-top minor">
+      </div>
+      <div class="block time time-top">
+      </div>
+      <div class="block zone zone-top minor">
+      </div>
+    </div>
+    <div class="block-row">
+      <div class="block date date-bot minor">
+      </div>
+      <div class="block time time-bot">
+      </div>
+      <div class="block zone zone-bot minor">
+      </div>
+    </div>
+  </div>
+</body>
+</html>
