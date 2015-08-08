@@ -6,7 +6,9 @@ $(function() {
       var sections = hash.substr(1).split("/");
 
       var timeStr, dateStr, zoneStr;
-      if (sections.length == 2) {
+      if (sections.length == 1) {
+        zoneStr = sections[0];
+      } else if (sections.length == 2) {
         timeStr = sections[0];
         zoneStr = sections[1];
       } else if (sections.length == 3) {
@@ -26,11 +28,15 @@ $(function() {
       });
 
       if (dateStr) {
-        date = moment.tz(dateStr, ["YYYY-MM-DD", "MM-DD-YYYY", "DD-MM-YYY", "Do MMM YYYY", "Do of MMM YYYY", "DD MMM YYY", "MMM DD YYYY", "MMM Do YYYY", "DD MM YY", "DD MM, YY"], zone);
+        var date = moment.tz(dateStr, ["YYYY-MM-DD", "MM-DD-YYYY", "DD-MM-YYY", "Do MMM YYYY", "Do of MMM YYYY", "DD MMM YYY", "MMM DD YYYY", "MMM Do YYYY", "DD MM YY", "DD MM, YY"], zone);
       } else {
-        date = moment.tz(zone);
+        var date = moment.tz(zone);
       }
-      var time = moment(timeStr, ["HH:mm", "hh:mm A", "HH:mm:ss", "hh:mm:ss A", "HH", "hh A"]);
+      if (timeStr) {
+        var time = moment(timeStr, ["HH:mm", "hh:mm A", "HH:mm:ss", "hh:mm:ss A", "HH", "hh A"]);
+      } else {
+        var time = moment().tz(zone);
+      }
       date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
 
       $(".date-top").text(date.format("MMMM Do, YYYY"));
@@ -99,6 +105,11 @@ $(function() {
   $(".minute").change(updateHash);
   $(".second").change(updateHash);
   $(".z").change(updateHash);
+
+  $(".now").click(function() {
+    var newDate = moment().tz($(".z").val());
+    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + "/" + newDate.format("HH:mm:ss") + "/" + $(".z").val().replace(/\//g, ",");
+  });
 
   moment.tz.names().forEach(function(zone) {
     var elements = zone.split("/");
