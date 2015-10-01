@@ -29,11 +29,18 @@
         <form class="form-inline">
           <a class="now btn btn-primary">Now</a>
           <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <input type="text" class="form-control date-input">
+          <input type="text" class="form-control date-input" placeholder="Date (any format)">
           <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <input type="text" class="form-control time-input">
+          <input type="text" class="form-control time-input" placeholder="Time (any format)">
           <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <select class="z selectpicker" data-live-search="true">
+          <select class="z-from selectpicker" data-live-search="true">
+            <option value="Local">your time</option>
+            <option data-divider="true">
+          </select>
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <select class="z-to selectpicker" data-live-search="true">
+            <option value="Local">your time</option>
+            <option data-divider="true">
           </select>
         </form>
       </ul>

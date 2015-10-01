@@ -20,47 +20,73 @@ $(function() {
     if (hash) {
       var sections = hash.substr(1).split(" | ");
 
-      var timeStr, dateStr, zoneStr;
+      var timeStr, dateStr, fromZoneStr, toZoneStr;
       if (sections.length == 1) {
-        zoneStr = sections[0];
+        fromZoneStr = sections[0];
       } else if (sections.length == 2) {
         timeStr = sections[0];
-        zoneStr = sections[1];
+        fromZoneStr = sections[1];
       } else if (sections.length == 3) {
         dateStr = sections[0];
         timeStr = sections[1];
-        zoneStr = sections[2];
+        fromZoneStr = sections[2];
+      } else if (sections.length == 4) {
+        dateStr = sections[0];
+        timeStr = sections[1];
+        fromZoneStr = sections[2];
+        toZoneStr = sections[3];
       }
 
-      var zone = findZone(zoneStr) || "UTC";
+      var fromZone = findZone(fromZoneStr) || "Local";
+      var toZone = !toZoneStr ? "Local" : (findZone(toZoneStr) || "Local");
 
+      var dateFormats = ["YYYY-MM-DD", "MM-DD-YYYY", "DD-MM-YYY", "Do MMM YYYY", "Do of MMM YYYY", "DD MMM YYY", "MMM DD YYYY", "MMM Do YYYY", "DD MM YY", "DD MM, YY"];
+      var timeFormats = ["HH:mm", "hh:mm A", "HH:mm:ss", "hh:mm:ss A", "HH", "hh A"];
       if (dateStr) {
-        var date = moment.tz(dateStr, ["YYYY-MM-DD", "MM-DD-YYYY", "DD-MM-YYY", "Do MMM YYYY", "Do of MMM YYYY", "DD MMM YYY", "MMM DD YYYY", "MMM Do YYYY", "DD MM YY", "DD MM, YY"], zone);
+        if (fromZone != "Local") {
+          var date = moment.tz(dateStr, dateFormats, fromZone);
+        } else {
+          var date = moment(dateStr, dateFormats);
+        }
       } else {
-        var date = moment.tz(zone);
+        if (fromZone != "Local") {
+          var date = moment.tz(fromZone);
+        } else {
+          var date = moment();
+        }
       }
+
       if (timeStr) {
-        var time = moment(timeStr, ["HH:mm", "hh:mm A", "HH:mm:ss", "hh:mm:ss A", "HH", "hh A"]);
+          var time = moment(timeStr, timeFormats);
       } else {
-        var time = moment().tz(zone);
+        if (fromZone != "Local") {
+          var time = moment();
+        } else {
+          var time = moment().tz(fromZone);
+        }
       }
       date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
       zoneTime = date;
 
       $(".date-top").text(date.format("MMMM Do, YYYY"));
       $(".time-top").text(date.format("HH:mm:ss"));
-      $(".zone-top").text(moment.tz.zone(zone).abbr(date));
+      $(".zone-top").text(fromZone == "Local" ? "your time" : moment.tz.zone(fromZone).abbr(date));
 
-      var converted = moment(date).local();
+      if (toZone == "Local") {
+        var converted = moment(date).local();
+      } else {
+        var converted = moment(date).tz(toZone);
+      }
       localTime = converted;
 
       $(".date-bot").text(converted.format("MMMM Do, YYYY"));
       $(".time-bot").text(converted.format("HH:mm:ss"));
-      $(".zone-bot").text("your time");
+      $(".zone-bot").text(toZone == "Local" ? "your time" : moment.tz.zone(toZone).abbr(date));
 
       $(".date-input").val(zoneTime.format("MMMM Do, YYYY"));
       $(".time-input").val(zoneTime.format("HH:mm:ss"));
-      $(".z").selectpicker("val", zone.replace("Etc/", "").replace(/_/g, " "));
+      $(".z-from").selectpicker("val", fromZone.replace("Etc/", "").replace(/_/g, " "));
+      $(".z-to").selectpicker("val", toZone.replace("Etc/", "").replace(/_/g, " "));
 
       $(".until").text(moment().to(converted));
     }
@@ -70,25 +96,27 @@ $(function() {
 
   if (!window.location.hash) {
     var newDate = moment.tz("UTC");
-    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | UTC";
+    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | UTC | Local";
   }
 
   var updateHash = function() {
-    window.location.hash = "#" + $(".date-input").val() + " | " + $(".time-input").val() + " | " + $(".z").val();
+    window.location.hash = "#" + $(".date-input").val() + " | " + $(".time-input").val() + " | " + $(".z-from").val() + " | " + $(".z-to").val();
   }
 
   $(".date-input").change(updateHash);
   $(".time-input").change(updateHash);
-  $(".z").change(updateHash);
+  $(".z-from").change(updateHash);
+  $(".z-to").change(updateHash);
 
   $(".now").click(function() {
     var newDate = moment().tz(findZone($(".z").val()));
-    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | " + $(".z").val()
+    window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | " + $(".z-from").val() + " | " + $(".z-to").val();
   });
 
   moment.tz.names().forEach(function(zone) {
     zone = zone.replace("Etc/", "").replace(/_/g, " ");
-    $(".z").append($("<option></option>").text(zone).attr("value", zone));
+    $(".z-from").append($("<option></option>").text(zone).attr("value", zone));
+    $(".z-to").append($("<option></option>").text(zone).attr("value", zone));
   });
 
   $('.selectpicker').selectpicker();
