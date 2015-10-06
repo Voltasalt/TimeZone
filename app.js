@@ -1,7 +1,7 @@
 $(function() {
   var zoneTime;
   var localTime;
-
+  
   var findZone = function(zoneStr) {
     var zone;
     moment.tz.names().forEach(function(z) {
