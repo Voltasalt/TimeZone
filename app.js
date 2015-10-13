@@ -1,7 +1,7 @@
 $(function() {
   var zoneTime;
   var localTime;
-  
+
   var findZone = function(zoneStr) {
     var zone;
     moment.tz.names().forEach(function(z) {
@@ -18,7 +18,7 @@ $(function() {
     var hash = window.location.hash;
 
     if (hash) {
-      var sections = hash.substr(1).split(" | ");
+      var sections = decodeURIComponent(hash.substr(1)).split(" | ");
 
       var timeStr, dateStr, fromZoneStr, toZoneStr;
       if (sections.length == 1) {
@@ -60,9 +60,9 @@ $(function() {
           var time = moment(timeStr, timeFormats);
       } else {
         if (fromZone != "Local") {
-          var time = moment();
-        } else {
           var time = moment().tz(fromZone);
+        } else {
+          var time = moment();
         }
       }
       date.hours(time.hours()).minutes(time.minutes()).seconds(time.seconds());
