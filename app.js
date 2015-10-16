@@ -109,7 +109,7 @@ $(function() {
   $(".z-to").change(updateHash);
 
   $(".now").click(function() {
-    var newDate = moment().tz(findZone($(".z").val()));
+    var newDate = moment().tz(findZone($(".z-from").val()));
     window.location.hash = "#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | " + $(".z-from").val() + " | " + $(".z-to").val();
   });
 
