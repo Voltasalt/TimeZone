@@ -15,7 +15,7 @@ $(function() {
   }
 
   var draw = function() {
-    var hash = window.location.hash.replace("_", " ");
+    var hash = window.location.hash.replace(/_/g, " ");
 
     if (hash) {
       var sections = decodeURIComponent(hash.substr(1)).split(" | ");
@@ -96,11 +96,11 @@ $(function() {
 
   if (!window.location.hash) {
     var newDate = moment.tz("UTC");
-    window.location.hash = ("#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | UTC | Local").replace(" ", "_");
+    window.location.hash = ("#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | UTC | Local").replace(/ /g, "_");
   }
 
   var updateHash = function() {
-    window.location.hash = ("#" + $(".date-input").val() + " | " + $(".time-input").val() + " | " + $(".z-from").val() + " | " + $(".z-to").val()).replace(" ", "_");
+    window.location.hash = ("#" + $(".date-input").val() + " | " + $(".time-input").val() + " | " + $(".z-from").val() + " | " + $(".z-to").val()).replace(/ /g, "_");
   }
 
   $(".date-input").change(updateHash);
@@ -110,7 +110,7 @@ $(function() {
 
   $(".now").click(function() {
     var newDate = moment().tz(findZone($(".z-from").val()));
-    window.location.hash = ("#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | " + $(".z-from").val() + " | " + $(".z-to").val()).replace(" ", "_");
+    window.location.hash = ("#" + newDate.format("YYYY-MM-DD") + " | " + newDate.format("HH:mm:ss") + " | " + $(".z-from").val() + " | " + $(".z-to").val()).replace(/ /g, "_");
   });
 
   moment.tz.names().forEach(function(zone) {
